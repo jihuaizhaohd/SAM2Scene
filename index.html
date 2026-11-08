@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SAM2Scene is a zero-shot 3D instance segmentation framework that builds cross-view consistency through geometry and uses SAM2's predicted IoU as a fidelity prior.">
+  <meta name="keywords" content="SAM2Scene, SAM2, 3D instance segmentation, zero-shot, indoor scene understanding">
+  <meta name="theme-color" content="#101735">
+  <meta property="og:title" content="SAM2Scene: SAM Knows How to Segment 3D Instances">
+  <meta property="og:description" content="Geometry-grounded multi-view proposal association and adaptive-fidelity clustering for zero-shot 3D instance segmentation.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/images/teaser.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>SAM2Scene | Project Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500%7CNoto+Sans:400,500&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+</head>
+<body>
+  <div class="page-glow page-glow-one" aria-hidden="true"></div>
+  <div class="page-glow page-glow-two" aria-hidden="true"></div>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="SAM2Scene home">
+      <span class="brand-mark">S2</span>
+      <span>SAM2Scene</span>
+    </a>
+    <div class="nav-links">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <header class="hero-shell">
+      <h1><span>SAM2Scene:</span> SAM Knows How to Segment 3D Instances</h1>
+
+      <div class="authors" aria-label="Authors">
+        <div class="author-row">
+          <span class="author-item">Jihuai Zhao<span class="author-punctuation">,</span></span>
+          <span class="author-item">Junbao Zhuo<span class="author-punctuation">,</span></span>
+          <span class="author-item">Liyong Wang<span class="author-punctuation">,</span></span>
+          <span class="author-item">Chang Liu<span class="author-punctuation">,</span></span>
+        </div>
+        <div class="author-row">
+          <span class="author-item">Bochao Zou<span class="author-punctuation">,</span></span>
+          <span class="author-item">Jiansheng Chen<span class="author-punctuation">,</span></span>
+          <span class="author-item">Huimin Ma</span>
+        </div>
+      </div>
+      <p class="affiliation">University of Science and Technology Beijing</p>
+      <div class="venue-line">ACM Multimedia 2026 <span class="venue-note">(Oral)</span></div>
+
+      <div class="publication-links" aria-label="Project resources">
+        <span class="pill-button muted" aria-label="Paper coming soon">
+          <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper · Coming soon</span>
+        </span>
+        <a class="pill-button" href="#bibtex">
+          <span class="icon"><i class="fas fa-quote-right"></i></span><span>BibTeX</span>
+        </a>
+      </div>
+
+      <figure class="teaser-card reveal">
+        <img src="assets/images/teaser.png" alt="Comparison between tracking-based propagation and SAM2Scene multi-view proposal association">
+        <figcaption>Instead of propagating a fragile single-view mask, SAM2Scene associates a proposal pool through projected geometry and cross-view support.</figcaption>
+      </figure>
+    </header>
+
+    <section id="abstract" class="content-section narrow reveal">
+      <div class="section-label">01 · Motivation</div>
+      <h2>Build consistency from geometry,<br>not from propagation.</h2>
+      <p class="lead">Recent zero-shot 3D instance segmentation methods lift multi-view 2D masks into point clouds, but tracking-based pipelines depend on a single initial mask and can accumulate errors across views.</p>
+      <p>We present <strong>SAM2Scene</strong>, a training-free framework that replaces sequential mask propagation with geometry-grounded multi-view proposal association. We further observe that SAM2's predicted IoU correlates with 3D mask quality. SAM2Scene turns this signal into an adaptive fidelity prior for graph construction and clustering, prioritizing reliable proposals to produce coherent 3D instances.</p>
+    </section>
+
+    <section class="content-section reveal">
+      <div class="split-heading">
+        <div>
+          <div class="section-label">The key observation</div>
+          <h2>SAM2 already hints at<br>which masks to trust.</h2>
+        </div>
+        <p>Ranking proposals by SAM2's predicted IoU retrieves substantially higher-quality 3D masks than random selection and closely tracks the oracle 2D IoU ranking.</p>
+      </div>
+      <figure class="paper-figure soft-card">
+        <img src="assets/images/proposal-ranking.png" alt="Proposal ranking analysis comparing random choice, oracle 2D IoU, and SAM predicted IoU">
+      </figure>
+    </section>
+
+    <section id="method" class="content-section method-section reveal">
+      <div class="section-label">02 · Method</div>
+      <h2>From inconsistent 2D proposals<br>to coherent 3D instances.</h2>
+      <figure class="paper-figure method-figure">
+        <img src="assets/images/method.png" alt="Overview of the two-stage SAM2Scene framework">
+      </figure>
+      <div class="method-grid">
+        <article>
+          <span class="step-number">A</span>
+          <h3>Multi-View Proposal Association</h3>
+          <p>3D projection establishes cross-view matches. Support views, projected IoU, and predicted IoU jointly rank prototypes and form stable proposal groups without sequential drift.</p>
+        </article>
+        <article>
+          <span class="step-number">B</span>
+          <h3>Adaptive-Fidelity Clustering</h3>
+          <p>Reliability cues shape the superpoint graph, while fidelity-guided seed ranking and region growing allow high-quality clusters to expand first.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section reveal">
+      <div class="split-heading compact">
+        <div>
+          <div class="section-label">Why it matters</div>
+          <h2>A clean break from<br>prior pipelines.</h2>
+        </div>
+        <p>SAM2Scene combines the broad proposal coverage of per-view segmentation with stable cross-view identity and reliability-aware 3D clustering.</p>
+      </div>
+      <figure class="paper-figure soft-card">
+        <img src="assets/images/comparison.png" alt="Comparison of independent lifting, tracking-based clustering, and SAM2Scene">
+      </figure>
+    </section>
+
+    <section id="results" class="content-section results-section reveal">
+      <div class="section-label">03 · Results</div>
+      <h2>More complete instances.<br>More accurate boundaries.</h2>
+      <p class="section-intro">Across ScanNetV2, ScanNet200, and ScanNet++, SAM2Scene consistently improves over frame-by-frame lifting and tracking-based methods.</p>
+      <figure class="paper-figure wide-figure">
+        <img src="assets/images/qualitative.png" alt="Qualitative comparison on ScanNetV2 and ScanNet++">
+        <figcaption>From left to right: input, SAI3D, SAM2Object, SAM2Scene, and ground truth. Red circles mark representative errors.</figcaption>
+      </figure>
+
+      <div class="result-grid">
+        <div class="result-copy">
+          <span class="mini-label">Sparse-view robustness</span>
+          <h3>Stable even when observations are sparse.</h3>
+          <p>SAM2Scene remains consistently ahead across all view budgets. The advantage is especially clear when selected views fall from 5% to 2%, where tracking-based propagation degrades more sharply.</p>
+        </div>
+        <figure class="paper-figure chart-card">
+          <img src="assets/images/sparse-view.png" alt="Sparse-view performance comparison on ScanNetV2">
+        </figure>
+      </div>
+    </section>
+
+    <section id="bibtex" class="content-section bibtex-section reveal">
+      <div>
+        <div class="section-label">04 · Citation</div>
+        <h2>Cite SAM2Scene</h2>
+        <p>The bibliographic record can be updated here once the official ACM DOI is available.</p>
+      </div>
+      <div class="code-card">
+        <button id="copy-bibtex" type="button" aria-label="Copy BibTeX">
+          <i class="far fa-copy"></i><span>Copy</span>
+        </button>
+        <pre><code id="bibtex-code">@inproceedings{zhao2026sam2scene,
+  title     = {SAM2Scene: SAM Knows How to Segment 3D Instances},
+  author    = {Zhao, Jihuai and Zhuo, Junbao and Wang, Liyong and
+               Liu, Chang and Zou, Bochao and Chen, Jiansheng and Ma, Huimin},
+  booktitle = {Proceedings of the 34th ACM International Conference on Multimedia},
+  year      = {2026}
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>SAM2Scene · University of Science and Technology Beijing</p>
+    <p>Website adapted from the <a href="https://vgg-t.github.io/">VGGT project page</a> and <a href="https://nerfies.github.io/">Nerfies</a>, under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+  </footer>
+</body>
+</html>
